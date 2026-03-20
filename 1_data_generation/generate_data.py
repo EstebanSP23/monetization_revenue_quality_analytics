@@ -3,6 +3,7 @@ from pathlib import Path
 from config import N_CUSTOMERS, START_DATE, END_DATE
 from generate_customers import generate_customers
 from generate_dimensions import generate_plan_catalog
+from generate_subscriptions import generate_initial_subscriptions
 
 
 def main() -> None:
@@ -24,8 +25,12 @@ def main() -> None:
     customers = generate_customers()
     customers.to_csv(output_dir / "customers.csv", index=False)
 
+    subscriptions = generate_initial_subscriptions(customers, plan_catalog)
+    subscriptions.to_csv(output_dir / "subscriptions.csv", index=False)
+
     print("Generated: plan_catalog.csv")
     print("Generated: customers.csv")
+    print("Generated: subscriptions.csv")
     print("Generation skeleton ready.")
 
     # TODO:
