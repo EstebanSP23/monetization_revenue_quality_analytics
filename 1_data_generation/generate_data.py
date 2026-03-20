@@ -1,6 +1,7 @@
-from pathlib import path
+from pathlib import Path
 
 from config import N_CUSTOMERS, START_DATE, END_DATE
+
 
 def main() -> None:
     """
@@ -24,6 +25,7 @@ def main() -> None:
     # 6. Export all tables to CSV
 
     print("Generation skeleton ready.")
+
 
 if __name__ == "__main__":
     main()
