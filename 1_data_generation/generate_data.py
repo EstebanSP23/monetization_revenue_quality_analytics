@@ -1,6 +1,7 @@
+import random
 from pathlib import Path
 
-from config import N_CUSTOMERS, START_DATE, END_DATE
+from config import N_CUSTOMERS, START_DATE, END_DATE, RANDOM_SEED
 from generate_customers import generate_customers
 from generate_dimensions import generate_plan_catalog
 from generate_subscriptions import generate_initial_subscriptions
@@ -11,6 +12,8 @@ def main() -> None:
     """
     Main entry point for synthetic data generation.
     """
+    random.seed(RANDOM_SEED)
+
     project_root = Path(__file__).resolve().parents[1]
     output_dir = project_root / "2_data" / "raw"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -36,7 +39,6 @@ def main() -> None:
     print("Generated: customers.csv")
     print("Generated: subscriptions.csv")
     print("Generated: subscription_events.csv")
-    print("Generation skeleton ready.")
 
     # TODO:
     # 1. Generate plan_catalog

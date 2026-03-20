@@ -6,6 +6,7 @@ from datetime import date
 # Project scope
 # =========================
 N_CUSTOMERS = 7000
+RANDOM_SEED = 42
 
 START_DATE = date(2023, 1, 1)
 END_DATE = date(2025, 12, 31)
