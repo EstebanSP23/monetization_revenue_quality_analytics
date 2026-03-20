@@ -1,0 +1,4 @@
+plan_id,plan_key,plan_name,plan_rank,base_monthly_price,location_add_on_price,is_active
+1,basic,Basic,1,99,0,True
+2,pro,Pro,2,299,40,True
+3,enterprise,Enterprise,3,799,70,True

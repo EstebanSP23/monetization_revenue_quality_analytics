@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from config import N_CUSTOMERS, START_DATE, END_DATE
+from generate_dimensions import generate_plan_catalog
 
 
 def main() -> None:
@@ -15,6 +16,12 @@ def main() -> None:
     print(f"Customers to generate: {N_CUSTOMERS}")
     print(f"Date range: {START_DATE} to {END_DATE}")
     print(f"Raw output folder: {output_dir}")
+
+    plan_catalog = generate_plan_catalog()
+    plan_catalog.to_csv(output_dir / "plan_catalog.csv", index=False)
+
+    print("Generated: plan_catalog.csv")
+    print("Generation skeleton ready.")
 
     # TODO:
     # 1. Generate plan_catalog
