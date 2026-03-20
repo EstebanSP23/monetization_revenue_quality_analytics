@@ -4,6 +4,7 @@ from config import N_CUSTOMERS, START_DATE, END_DATE
 from generate_customers import generate_customers
 from generate_dimensions import generate_plan_catalog
 from generate_subscriptions import generate_initial_subscriptions
+from generate_events import generate_signup_events
 
 
 def main() -> None:
@@ -28,9 +29,13 @@ def main() -> None:
     subscriptions = generate_initial_subscriptions(customers, plan_catalog)
     subscriptions.to_csv(output_dir / "subscriptions.csv", index=False)
 
+    subscription_events = generate_signup_events(subscriptions)
+    subscription_events.to_csv(output_dir / "subscription_events.csv", index=False)
+
     print("Generated: plan_catalog.csv")
     print("Generated: customers.csv")
     print("Generated: subscriptions.csv")
+    print("Generated: subscription_events.csv")
     print("Generation skeleton ready.")
 
     # TODO:
