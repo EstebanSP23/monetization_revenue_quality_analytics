@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 from pathlib import Path
 
 from config import N_CUSTOMERS, START_DATE, END_DATE, RANDOM_SEED
@@ -7,6 +8,7 @@ from generate_dimensions import generate_plan_catalog
 from generate_subscriptions import generate_initial_subscriptions
 from generate_events import generate_signup_events
 from build_customer_month import build_customer_month
+from simulate_lifecycle import simulate_churn_only
 
 
 def main() -> None:
@@ -31,9 +33,19 @@ def main() -> None:
     customers.to_csv(output_dir / "customers.csv", index=False)
 
     subscriptions = generate_initial_subscriptions(customers, plan_catalog)
+    subscriptions, churn_events = simulate_churn_only(customers, subscriptions)
     subscriptions.to_csv(output_dir / "subscriptions.csv", index=False)
 
-    subscription_events = generate_signup_events(subscriptions)
+    signup_events = generate_signup_events(subscriptions)
+
+    if not churn_events.empty:
+        subscription_events = pd.concat(
+            [signup_events, churn_events],
+            ignore_index=True
+        ).sort_values(["event_date", "customer_id", "event_type"]).reset_index(drop=True)
+    else:
+        subscription_events = signup_events
+
     subscription_events.to_csv(output_dir / "subscription_events.csv", index=False)
 
     customer_month = build_customer_month(subscriptions)
@@ -44,15 +56,6 @@ def main() -> None:
     print("Generated: subscriptions.csv")
     print("Generated: subscription_events.csv")
     print("Generated: customer_month.csv")
-
-    # TODO:
-    # 1. Generate plan_catalog
-    # 2. Generate customers
-    # 3. Simulate subscriptions
-    # 4. Generate subscription_events
-    # 5. Build customer_month
-    # 6. Export all tables to CSV
-
     print("Generation skeleton ready.")
 
 

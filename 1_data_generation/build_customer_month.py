@@ -8,18 +8,25 @@ def build_customer_month(subscriptions_df: pd.DataFrame) -> pd.DataFrame:
 
     for row in subscriptions_df.itertuples(index=False):
         signup_month = pd.to_datetime(row.start_date).to_period("M").to_timestamp()
-        end_month = pd.Timestamp(END_DATE).to_period("M").to_timestamp()
+
+        effective_end = row.end_date if pd.notna(row.end_date) else END_DATE
+        end_month = pd.Timestamp(effective_end).to_period("M").to_timestamp()
 
         month_range = pd.date_range(start=signup_month, end=end_month, freq="MS")
 
         prev_billed_mrr = None
+        is_churned_subscription = pd.notna(row.end_date)
 
         for i, month_start in enumerate(month_range):
             billed_mrr = row.billed_mrr
+            is_last_month = month_start == end_month
 
             if i == 0:
                 movement_type = "new"
                 mrr_change = billed_mrr
+            elif is_churned_subscription and is_last_month:
+                movement_type = "churn"
+                mrr_change = -prev_billed_mrr if prev_billed_mrr is not None else -billed_mrr
             else:
                 movement_type = "flat"
                 mrr_change = billed_mrr - prev_billed_mrr
