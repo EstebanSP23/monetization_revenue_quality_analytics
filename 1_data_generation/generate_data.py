@@ -56,6 +56,11 @@ def main() -> None:
         f"EVT_{i:05d}" for i in range(1, len(subscription_events) + 1)
     ]
 
+    for col in ["old_plan_id", "new_plan_id", "old_locations", "new_locations"]:
+        subscription_events[col] = pd.to_numeric(
+            subscription_events[col], errors="coerce"
+        ).astype("Int64")
+
     subscription_events.to_csv(output_dir / "subscription_events.csv", index=False)
 
     customer_month = build_customer_month(subscriptions, subscription_events)

@@ -23,13 +23,13 @@ CREATE SCHEMA IF NOT EXISTS mart;
 DROP TABLE IF EXISTS raw.plan_catalog;
 
 CREATE TABLE raw.plan_catalog (
-    plan_id                 INTEGER PRIMARY KEY,
-    plan_key                TEXT,
-    plan_name               TEXT,
-    plan_rank               INTEGER,
-    base_monthly_price      NUMERIC(10,2),
-    location_add_on_price   NUMERIC(10,2),
-    is_active               BOOLEAN
+    plan_id                 		INTEGER PRIMARY KEY,
+    plan_key                		TEXT,
+    plan_name               		TEXT,
+    plan_rank               		INTEGER,
+    base_monthly_price      		NUMERIC(10,2),
+    location_add_on_price   		NUMERIC(10,2),
+    is_active               		BOOLEAN
 );
 
 -- ============================================
@@ -40,13 +40,13 @@ CREATE TABLE raw.plan_catalog (
 DROP TABLE IF EXISTS raw.customers;
 
 CREATE TABLE raw.customers (
-	customer_id				TEXT PRIMARY KEY,
-	segment					TEXT,
-	signup_date				DATE,
+	customer_id			TEXT PRIMARY KEY,
+	segment				TEXT,
+	signup_date			DATE,
 	initial_plan_key		TEXT,
-	initial_contract_type	TEXT,
+	initial_contract_type		TEXT,
 	initial_locations		INTEGER,
-	status					TEXT
+	status				TEXT
 );
 
 -- ============================================
@@ -58,17 +58,17 @@ DROP TABLE IF EXISTS raw.subscriptions;
 
 CREATE TABLE raw.subscriptions (
 	subscription_id			TEXT PRIMARY KEY,
-	customer_id				TEXT,
-	plan_id					INTEGER,
-	plan_key				TEXT,
+	customer_id			TEXT,
+	plan_id				INTEGER,
+	plan_key			TEXT,
 	contract_type			TEXT,
-	start_date				DATE,
-	end_date				DATE,
-	locations				INTEGER,
+	start_date			DATE,
+	end_date			DATE,
+	locations			INTEGER,
 	discount_pct			NUMERIC(4,2),
-	list_mrr				NUMERIC(10,2),
-	billed_mrr				NUMERIC(10,2),
-	is_active				BOOLEAN
+	list_mrr			NUMERIC(10,2),
+	billed_mrr			NUMERIC(10,2),
+	is_active			BOOLEAN
 );
 
 -- ============================================
@@ -79,17 +79,17 @@ CREATE TABLE raw.subscriptions (
 DROP TABLE IF EXISTS raw.subscription_events;
 
 CREATE TABLE raw.subscription_events (
-    event_id            TEXT PRIMARY KEY,
-    customer_id         TEXT,
-    subscription_id     TEXT,
-    event_date          DATE,
-    event_type          TEXT,
-    old_plan_id         INTEGER,
-    new_plan_id         INTEGER,
-    old_locations       INTEGER,
-    new_locations       INTEGER,
-    old_discount_pct    NUMERIC(4,2),
-    new_discount_pct    NUMERIC(4,2)
+    event_id            		TEXT PRIMARY KEY,
+    customer_id         		TEXT,
+    subscription_id     		TEXT,
+    event_date          		DATE,
+    event_type          		TEXT,
+    old_plan_id         		INTEGER,
+    new_plan_id         		INTEGER,
+    old_locations       		INTEGER,
+    new_locations       		INTEGER,
+    old_discount_pct    		NUMERIC(4,2),
+    new_discount_pct   		 	NUMERIC(4,2)
 );
 
 -- ============================================
@@ -103,13 +103,13 @@ CREATE TABLE raw.customer_month (
 	month_start			DATE,
 	customer_id			TEXT,
 	plan_id				INTEGER,
-	contract_type		TEXT,
+	contract_type			TEXT,
 	locations			INTEGER,
 	list_mrr			NUMERIC(10,2),
-	discount_pct		NUMERIC(4,2),
+	discount_pct			NUMERIC(4,2),
 	billed_mrr			NUMERIC(10,2),
-	prev_billed_mrr		NUMERIC(10,2),
+	prev_billed_mrr			NUMERIC(10,2),
 	mrr_change			NUMERIC(10,2),
-	movement_type		TEXT,
+	movement_type			TEXT,
 	is_active			BOOLEAN
 );
