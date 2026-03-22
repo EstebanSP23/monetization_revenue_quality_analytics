@@ -53,7 +53,7 @@ def main() -> None:
 
     subscription_events.to_csv(output_dir / "subscription_events.csv", index=False)
 
-    customer_month = build_customer_month(subscriptions)
+    customer_month = build_customer_month(subscriptions, subscription_events)
     customer_month.to_csv(output_dir / "customer_month.csv", index=False)
 
     print("Generated: plan_catalog.csv")

@@ -3,52 +3,118 @@ import pandas as pd
 from config import END_DATE
 
 
-def build_customer_month(subscriptions_df: pd.DataFrame) -> pd.DataFrame:
+def build_customer_month(
+    subscriptions_df: pd.DataFrame,
+    subscription_events_df: pd.DataFrame,
+) -> pd.DataFrame:
     rows = []
 
-    for row in subscriptions_df.itertuples(index=False):
-        signup_month = pd.to_datetime(row.start_date).to_period("M").to_timestamp()
+    subscriptions_df = subscriptions_df.copy()
+    subscriptions_df["start_date"] = pd.to_datetime(subscriptions_df["start_date"])
+    subscriptions_df["end_date"] = pd.to_datetime(subscriptions_df["end_date"], errors="coerce")
 
-        effective_end = row.end_date if pd.notna(row.end_date) else END_DATE
+    subscriptions_df = subscriptions_df.sort_values(
+        ["customer_id", "start_date", "subscription_id"]
+    ).reset_index(drop=True)
+
+    for row in subscriptions_df.itertuples(index=False):
+        start_month = pd.Timestamp(row.start_date).to_period("M").to_timestamp()
+        effective_end = row.end_date if pd.notna(row.end_date) else pd.Timestamp(END_DATE)
         end_month = pd.Timestamp(effective_end).to_period("M").to_timestamp()
 
-        month_range = pd.date_range(start=signup_month, end=end_month, freq="MS")
+        month_range = pd.date_range(start=start_month, end=end_month, freq="MS")
 
-        prev_billed_mrr = None
-        is_churned_subscription = pd.notna(row.end_date)
-
-        for i, month_start in enumerate(month_range):
-            billed_mrr = row.billed_mrr
-            is_last_month = month_start == end_month
-
-            if i == 0:
-                movement_type = "new"
-                mrr_change = billed_mrr
-            elif is_churned_subscription and is_last_month:
-                movement_type = "churn"
-                mrr_change = -prev_billed_mrr if prev_billed_mrr is not None else -billed_mrr
-            else:
-                movement_type = "flat"
-                mrr_change = billed_mrr - prev_billed_mrr
-
+        for month_start in month_range:
             rows.append(
                 {
-                    "month_start": month_start.date(),
+                    "month_start": month_start,
                     "customer_id": row.customer_id,
+                    "subscription_id": row.subscription_id,
                     "plan_id": row.plan_id,
                     "contract_type": row.contract_type,
                     "locations": row.locations,
                     "list_mrr": row.list_mrr,
                     "discount_pct": row.discount_pct,
-                    "billed_mrr": billed_mrr,
-                    "prev_billed_mrr": prev_billed_mrr,
-                    "mrr_change": round(mrr_change, 2) if mrr_change is not None else None,
-                    "movement_type": movement_type,
-                    "is_active": True,
+                    "billed_mrr": row.billed_mrr,
+                    "start_date": row.start_date,
+                    "end_date": row.end_date,
                 }
             )
 
-            prev_billed_mrr = billed_mrr
+    df = pd.DataFrame(rows)
 
-    df = pd.DataFrame(rows).sort_values(["customer_id", "month_start"]).reset_index(drop=True)
+    # Keep only one row per customer-month:
+    # the latest subscription state active in that month
+    df = (
+        df.sort_values(["customer_id", "month_start", "start_date", "subscription_id"])
+          .drop_duplicates(subset=["customer_id", "month_start"], keep="last")
+          .sort_values(["customer_id", "month_start"])
+          .reset_index(drop=True)
+    )
+
+    df["prev_billed_mrr"] = df.groupby("customer_id")["billed_mrr"].shift(1)
+
+    churn_months = set()
+    if not subscription_events_df.empty:
+        churn_events = subscription_events_df[
+            subscription_events_df["event_type"] == "churn"
+        ].copy()
+
+        if not churn_events.empty:
+            churn_events["event_date"] = pd.to_datetime(churn_events["event_date"])
+            churn_events["month_start"] = (
+                churn_events["event_date"].dt.to_period("M").dt.to_timestamp()
+            )
+            churn_months = set(
+                zip(churn_events["customer_id"], churn_events["month_start"])
+            )
+
+    def classify_movement(row):
+        key = (row["customer_id"], row["month_start"])
+
+        if pd.isna(row["prev_billed_mrr"]):
+            return "new"
+
+        if key in churn_months:
+            return "churn"
+
+        if row["billed_mrr"] > row["prev_billed_mrr"]:
+            return "expansion"
+
+        if row["billed_mrr"] < row["prev_billed_mrr"]:
+            return "contraction"
+
+        return "flat"
+
+    df["movement_type"] = df.apply(classify_movement, axis=1)
+
+    def calculate_mrr_change(row):
+        if row["movement_type"] == "new":
+            return row["billed_mrr"]
+        if row["movement_type"] == "churn":
+            return -row["prev_billed_mrr"]
+        return row["billed_mrr"] - row["prev_billed_mrr"]
+
+    df["mrr_change"] = df.apply(calculate_mrr_change, axis=1).round(2)
+    df["is_active"] = True
+
+    df["month_start"] = df["month_start"].dt.date
+
+    df = df[
+        [
+            "month_start",
+            "customer_id",
+            "plan_id",
+            "contract_type",
+            "locations",
+            "list_mrr",
+            "discount_pct",
+            "billed_mrr",
+            "prev_billed_mrr",
+            "mrr_change",
+            "movement_type",
+            "is_active",
+        ]
+    ]
+
     return df
