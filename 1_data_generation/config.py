@@ -134,3 +134,53 @@ ACQUISITION_DISCOUNT_PROBS = {
         "annual":  {0.00: 0.25, 0.10: 0.35, 0.20: 0.30, 0.30: 0.10},
     },
 }
+
+# =========================
+# Expansion & Contraction Probabilities
+# =========================
+
+EXPANSION_PROBS = {
+    ("small", "basic", "monthly"): 0.008,
+    ("small", "basic", "annual"): 0.010,
+    ("small", "pro", "monthly"): 0.014,
+    ("small", "pro", "annual"): 0.016,
+    ("small", "enterprise", "monthly"): 0.010,
+    ("small", "enterprise", "annual"): 0.012,
+
+    ("mid", "basic", "monthly"): 0.010,
+    ("mid", "basic", "annual"): 0.012,
+    ("mid", "pro", "monthly"): 0.024,
+    ("mid", "pro", "annual"): 0.027,
+    ("mid", "enterprise", "monthly"): 0.020,
+    ("mid", "enterprise", "annual"): 0.023,
+
+    ("large", "basic", "monthly"): 0.005,
+    ("large", "basic", "annual"): 0.006,
+    ("large", "pro", "monthly"): 0.020,
+    ("large", "pro", "annual"): 0.022,
+    ("large", "enterprise", "monthly"): 0.030,
+    ("large", "enterprise", "annual"): 0.033,
+}
+
+CONTRACTION_PROBS = {
+    ("small", "basic", "monthly"): 0.004,
+    ("small", "basic", "annual"): 0.003,
+    ("small", "pro", "monthly"): 0.010,
+    ("small", "pro", "annual"): 0.008,
+    ("small", "enterprise", "monthly"): 0.012,
+    ("small", "enterprise", "annual"): 0.010,
+
+    ("mid", "basic", "monthly"): 0.003,
+    ("mid", "basic", "annual"): 0.002,
+    ("mid", "pro", "monthly"): 0.008,
+    ("mid", "pro", "annual"): 0.006,
+    ("mid", "enterprise", "monthly"): 0.010,
+    ("mid", "enterprise", "annual"): 0.008,
+
+    ("large", "basic", "monthly"): 0.002,
+    ("large", "basic", "annual"): 0.001,
+    ("large", "pro", "monthly"): 0.006,
+    ("large", "pro", "annual"): 0.005,
+    ("large", "enterprise", "monthly"): 0.008,
+    ("large", "enterprise", "annual"): 0.006,
+}

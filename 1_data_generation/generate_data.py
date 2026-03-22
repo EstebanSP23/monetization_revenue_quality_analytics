@@ -8,7 +8,7 @@ from generate_dimensions import generate_plan_catalog
 from generate_subscriptions import generate_initial_subscriptions
 from generate_events import generate_signup_events
 from build_customer_month import build_customer_month
-from simulate_lifecycle import simulate_churn_only
+from simulate_lifecycle import simulate_lifecycle
 
 
 def main() -> None:
@@ -32,15 +32,20 @@ def main() -> None:
     customers = generate_customers()
     customers.to_csv(output_dir / "customers.csv", index=False)
 
-    subscriptions = generate_initial_subscriptions(customers, plan_catalog)
-    subscriptions, churn_events = simulate_churn_only(customers, subscriptions)
+    subscriptions_seed = generate_initial_subscriptions(customers, plan_catalog)
+
+    subscriptions, lifecycle_events = simulate_lifecycle(
+        customers_df=customers,
+        subscriptions_df=subscriptions_seed,
+        plan_catalog_df=plan_catalog,
+    )
     subscriptions.to_csv(output_dir / "subscriptions.csv", index=False)
 
-    signup_events = generate_signup_events(subscriptions)
+    signup_events = generate_signup_events(subscriptions_seed)
 
-    if not churn_events.empty:
+    if not lifecycle_events.empty:
         subscription_events = pd.concat(
-            [signup_events, churn_events],
+            [signup_events, lifecycle_events],
             ignore_index=True
         ).sort_values(["event_date", "customer_id", "event_type"]).reset_index(drop=True)
     else:
