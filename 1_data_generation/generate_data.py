@@ -51,6 +51,11 @@ def main() -> None:
     else:
         subscription_events = signup_events
 
+    subscription_events = subscription_events.reset_index(drop=True)
+    subscription_events["event_id"] = [
+        f"EVT_{i:05d}" for i in range(1, len(subscription_events) + 1)
+    ]
+
     subscription_events.to_csv(output_dir / "subscription_events.csv", index=False)
 
     customer_month = build_customer_month(subscriptions, subscription_events)
