@@ -1,512 +1,257 @@
-\# Monetization \& Revenue Quality Analytics
+# Monetization & Revenue Quality Analytics
 
+### Production-Style Monetization Analytics System for a B2B Fitness SaaS Business
 
+---
 
-\### Production-Style Monetization Analytics System for a B2B Fitness SaaS Business
+## 1. Executive Summary
 
-
-
-\---
-
-
-
-\## 1. Executive Summary
-
-
-
-This project builds a \*\*production-style analytics system\*\* to evaluate whether a B2B fitness SaaS company is growing through \*\*healthy monetization strategy\*\* or through \*\*weak pricing discipline\*\*.
-
-
+This project builds a **production-style analytics system** to evaluate whether a B2B fitness SaaS company is growing through **healthy monetization strategy** or through **weak pricing discipline**.
 
 It answers the executive question:
 
-
-
-> \*\*Is our revenue growth driven by healthy pricing and expansion, or by weak discounting and low-quality monetization?\*\*
-
-
+> **Is our revenue growth driven by healthy pricing and expansion, or by weak discounting and low-quality monetization?**
 
 The system is designed to analyze:
 
-
-
-\- Pricing tier performance
-
-\- Discounting behavior
-
-\- Expansion and contraction revenue
-
-\- Customer churn
-
-\- Revenue quality by segment
-
-\- Contract mix (monthly vs annual)
-
-\- Monthly recurring revenue (MRR) movement over time
-
-
+- Pricing tier performance
+- Discounting behavior
+- Expansion and contraction revenue
+- Customer churn
+- Revenue quality by segment
+- Contract mix (monthly vs annual)
+- Monthly recurring revenue (MRR) movement over time
 
 The dataset is synthetic but intentionally designed to simulate realistic subscription behavior for a B2B fitness SaaS platform serving gyms, studios, and multi-location fitness businesses.
 
+---
 
-
-\---
-
-
-
-\## 2. Business Context
-
-
+## 2. Business Context
 
 The fictional company sells subscription software to fitness businesses to help manage:
 
-
-
-\- memberships
-
-\- scheduling
-
-\- billing
-
-\- retention tracking
-
-\- business performance reporting
-
-
+- memberships
+- scheduling
+- billing
+- retention tracking
+- business performance reporting
 
 Customer segments include:
 
-
-
-\- Small businesses
-
-\- Mid-sized businesses
-
-\- Large businesses
-
-
+- Small businesses
+- Mid-sized businesses
+- Large businesses
 
 The monetization model includes:
 
+- 3 pricing plans: Basic, Pro, Enterprise
+- Monthly and annual contracts
+- Discounting at acquisition
+- Expansion and contraction through location growth
+- Churn over time
 
+This project focuses on **revenue quality**, not just revenue volume.
 
-\- 3 pricing plans: Basic, Pro, Enterprise
+---
 
-\- Monthly and annual contracts
-
-\- Discounting at acquisition
-
-\- Expansion and contraction through location growth
-
-\- Churn over time
-
-
-
-This project focuses on \*\*revenue quality\*\*, not just revenue volume.
-
-
-
-\---
-
-
-
-\## 3. Architecture Overview
-
-
+## 3. Architecture Overview
 
 ```text
-
 Data Generation (Python)
-
-&#x20;       │
-
-&#x20;       ▼
-
+        │
+        ▼
 CSV Files (Raw Data)
-
-&#x20;       │
-
-&#x20;       ▼
-
+        │
+        ▼
 PostgreSQL
-
 ───────────────
-
 RAW Layer
-
-&#x20; • plan\_catalog
-
-&#x20; • customers
-
-&#x20; • subscriptions
-
-&#x20; • subscription\_events
-
-&#x20; • customer\_month
-
+  • plan_catalog
+  • customers
+  • subscriptions
+  • subscription_events
+  • customer_month
 ───────────────
-
 STAGING Layer
-
-&#x20; • in progress
-
+  • in progress
 ───────────────
-
 MART Layer
-
-&#x20; • planned
-
-&#x20;       │
-
-&#x20;       ▼
-
+  • planned
+        │
+        ▼
 Power BI
-
-&#x20; • planned executive dashboard
-
+  • planned executive dashboard
 ```
 
+---
 
+## 4. Current Project Status
 
-\---
+### Completed so far
 
+- Business scenario and monetization model defined
+- Synthetic data generator structure created in Python
+- Reproducible data generation using a fixed random seed
+- Raw CSV outputs generated
+- Lifecycle simulation includes:
+  - signup
+  - expansion
+  - contraction
+  - churn
+- Monthly customer-level fact table generated (`customer_month`)
+- Initial PostgreSQL RAW DDL created
 
+### In progress
 
-\## 4. Current Project Status
+- PostgreSQL RAW table creation and loading
+- STAGING layer design
+- KPI logic in SQL
+- MART layer modeling
+- Power BI semantic model and dashboard
 
+---
 
+## 5. Synthetic Business Model Assumptions
 
-\### Completed so far
-
-
-
-\- Business scenario and monetization model defined
-
-\- Synthetic data generator structure created in Python
-
-\- Reproducible data generation using a fixed random seed
-
-\- Raw CSV outputs generated
-
-\- Lifecycle simulation includes:
-
-&#x20; - signup
-
-&#x20; - expansion
-
-&#x20; - contraction
-
-&#x20; - churn
-
-\- Monthly customer-level fact table generated (`customer\_month`)
-
-\- Initial PostgreSQL RAW DDL created
-
-
-
-\### In progress
-
-
-
-\- PostgreSQL RAW table creation and loading
-
-\- STAGING layer design
-
-\- KPI logic in SQL
-
-\- MART layer modeling
-
-\- Power BI semantic model and dashboard
-
-
-
-\---
-
-
-
-\## 5. Synthetic Business Model Assumptions
-
-
-
-\- Date range: Jan 2023 – Dec 2025
-
-\- 7,000 synthetic business customers
-
-\- B2B fitness SaaS company
-
-\- 3 pricing plans:
-
-&#x20; - Basic ($99)
-
-&#x20; - Pro ($299)
-
-&#x20; - Enterprise ($799)
-
-\- Additional location pricing:
-
-&#x20; - Pro: +$40 per extra location
-
-&#x20; - Enterprise: +$70 per extra location
-
-\- Contract types:
-
-&#x20; - Monthly
-
-&#x20; - Annual
-
-\- Discount bands:
-
-&#x20; - 0%
-
-&#x20; - 10%
-
-&#x20; - 20%
-
-&#x20; - 30%
-
-
+- Date range: Jan 2023 – Dec 2025
+- 7,000 synthetic business customers
+- B2B fitness SaaS company
+- 3 pricing plans:
+  - Basic ($99)
+  - Pro ($299)
+  - Enterprise ($799)
+- Additional location pricing:
+  - Pro: +$40 per extra location
+  - Enterprise: +$70 per extra location
+- Contract types:
+  - Monthly
+  - Annual
+- Discount bands:
+  - 0%
+  - 10%
+  - 20%
+  - 30%
 
 High-level behavioral assumptions:
 
+- Smaller businesses churn more than larger ones
+- Annual contracts retain better than monthly contracts
+- Expansion and contraction can happen through changes in number of locations
+- Heavy discounting is intended to be associated with weaker long-term revenue quality
 
+---
 
-\- Smaller businesses churn more than larger ones
+## 6. Data Pipeline Layers
 
-\- Annual contracts retain better than monthly contracts
-
-\- Expansion and contraction can happen through changes in number of locations
-
-\- Heavy discounting is intended to be associated with weaker long-term revenue quality
-
-
-
-\---
-
-
-
-\## 6. Data Pipeline Layers
-
-
-
-\### RAW Layer
-
-
+### RAW Layer
 
 Stores CSV data as generated by Python.
 
-
-
 Tables:
 
+- raw.plan_catalog
+- raw.customers
+- raw.subscriptions
+- raw.subscription_events
+- raw.customer_month
 
-
-\- raw.plan\_catalog
-
-\- raw.customers
-
-\- raw.subscriptions
-
-\- raw.subscription\_events
-
-\- raw.customer\_month
-
-
-
-\### STAGING Layer
-
-
+### STAGING Layer
 
 Planned next step.
 
-
-
 Purpose:
 
+- standardize types
+- validate raw inputs
+- prepare analytics-ready intermediate tables
 
-
-\- standardize types
-
-\- validate raw inputs
-
-\- prepare analytics-ready intermediate tables
-
-
-
-\### MART Layer
-
-
+### MART Layer
 
 Planned.
 
-
-
 Expected direction:
 
+- dimensions for plan, customer, date
+- fact table centered on monthly customer monetization behavior
+- KPI views for retention, expansion, contraction, and revenue quality
 
+---
 
-\- dimensions for plan, customer, date
-
-\- fact table centered on monthly customer monetization behavior
-
-\- KPI views for retention, expansion, contraction, and revenue quality
-
-
-
-\---
-
-
-
-\## 7. Key Signals This Project Is Designed to Demonstrate
-
-
+## 7. Key Signals This Project Is Designed to Demonstrate
 
 This project is designed to showcase:
 
+- Production-style analytics workflow
+- Synthetic but business-driven data generation
+- Monetization analytics thinking
+- Layered SQL architecture
+- Revenue movement logic
+- Monthly customer-level fact modeling
+- Clear separation of generation, storage, transformation, and presentation
+- Business-focused portfolio storytelling
 
+---
 
-\- Production-style analytics workflow
-
-\- Synthetic but business-driven data generation
-
-\- Monetization analytics thinking
-
-\- Layered SQL architecture
-
-\- Revenue movement logic
-
-\- Monthly customer-level fact modeling
-
-\- Clear separation of generation, storage, transformation, and presentation
-
-\- Business-focused portfolio storytelling
-
-
-
-\---
-
-
-
-\## 8. Repository Structure
-
-
+## 8. Repository Structure
 
 ```text
-
-0\_project\_admin/
-
-1\_data\_generation/
-
-2\_data/
-
-&#x20;   raw/
-
-&#x20;   processed/
-
-3\_sql/
-
-&#x20;   raw/
-
-&#x20;   staging/
-
-&#x20;   mart/
-
-&#x20;   validation/
-
-4\_power\_bi/
-
-&#x20;   pbix/
-
-&#x20;   screenshots/
-
-5\_outputs/
-
+0_project_admin/
+1_data_generation/
+2_data/
+    raw/
+    processed/
+3_sql/
+    raw/
+    staging/
+    mart/
+    validation/
+4_power_bi/
+    pbix/
+    screenshots/
+5_outputs/
 README.md
-
 ```
 
+---
 
-
-\---
-
-
-
-\## 9. Current Outputs
-
-
+## 9. Current Outputs
 
 Current generated raw outputs include:
 
-
-
-\- `plan\_catalog.csv`
-
-\- `customers.csv`
-
-\- `subscriptions.csv`
-
-\- `subscription\_events.csv`
-
-\- `customer\_month.csv`
-
-
+- `plan_catalog.csv`
+- `customers.csv`
+- `subscriptions.csv`
+- `subscription_events.csv`
+- `customer_month.csv`
 
 These outputs are reproducible through a fixed-seed Python generation process.
 
+---
 
+## 10. How to Reproduce the Project
 
-\---
+1. Run the Python synthetic data generator
+2. Generate raw CSV files into `2_data/raw/`
+3. Load raw CSVs into PostgreSQL
+4. Execute SQL pipeline scripts (RAW → STAGING → MART)
+5. Connect Power BI to the analytics-ready model
 
+---
 
-
-\## 10. How to Reproduce the Project
-
-
-
-1\. Run the Python synthetic data generator
-
-2\. Generate raw CSV files into `2\_data/raw/`
-
-3\. Load raw CSVs into PostgreSQL
-
-4\. Execute SQL pipeline scripts (RAW → STAGING → MART)
-
-5\. Connect Power BI to the analytics-ready model
-
-
-
-\---
-
-
-
-\## 11. Why This Project Matters
-
-
+## 11. Why This Project Matters
 
 This project is not just about reporting recurring revenue.
 
-
-
 It is designed to reflect how a business would evaluate:
 
-
-
-\- whether discounting is helping or hurting growth quality
-
-\- whether expansion revenue is healthy
-
-\- whether customer segments monetize differently
-
-\- whether pricing structure supports sustainable growth
-
-
+- whether discounting is helping or hurting growth quality
+- whether expansion revenue is healthy
+- whether customer segments monetize differently
+- whether pricing structure supports sustainable growth
 
 The goal is to build a business-relevant analytics system that feels closer to real monetization analysis work than to a generic dashboard exercise.
 
+---
 
-
-\---
-
-
-
-\*Project by \[EstebanSP23](https://github.com/EstebanSP23) – Data Analytics Portfolio\*
+*Project by [EstebanSP23](https://github.com/EstebanSP23) – Data Analytics Portfolio*
 
