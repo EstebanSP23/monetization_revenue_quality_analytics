@@ -30,3 +30,7 @@ SELECT event_id, customer_id, subscription_id, event_date, event_type, old_plan_
 FROM raw.subscription_events;
 
 -- ---------- staging.customer_month (straight copy) ----------
+TRUNCATE TABLE staging.customer_month;
+INSERT INTO staging.customer_month (month_start, customer_id, plan_id, contract_type, locations, list_mrr, discount_pct, billed_mrr, prev_billed_mrr, mrr_change, movement_type, is_active)
+SELECT month_start, customer_id, plan_id, contract_type, locations, list_mrr, discount_pct, billed_mrr, prev_billed_mrr, mrr_change, movement_type, is_active
+FROM raw.customer_month;

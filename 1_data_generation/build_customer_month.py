@@ -11,7 +11,9 @@ def build_customer_month(
 
     subscriptions_df = subscriptions_df.copy()
     subscriptions_df["start_date"] = pd.to_datetime(subscriptions_df["start_date"])
-    subscriptions_df["end_date"] = pd.to_datetime(subscriptions_df["end_date"], errors="coerce")
+    subscriptions_df["end_date"] = pd.to_datetime(
+        subscriptions_df["end_date"], errors="coerce"
+    )
 
     subscriptions_df = subscriptions_df.sort_values(
         ["customer_id", "start_date", "subscription_id"]
@@ -19,7 +21,9 @@ def build_customer_month(
 
     for row in subscriptions_df.itertuples(index=False):
         start_month = pd.Timestamp(row.start_date).to_period("M").to_timestamp()
-        effective_end = row.end_date if pd.notna(row.end_date) else pd.Timestamp(END_DATE)
+        effective_end = (
+            row.end_date if pd.notna(row.end_date) else pd.Timestamp(END_DATE)
+        )
         end_month = pd.Timestamp(effective_end).to_period("M").to_timestamp()
 
         month_range = pd.date_range(start=start_month, end=end_month, freq="MS")
@@ -47,9 +51,9 @@ def build_customer_month(
     # the latest subscription state active in that month
     df = (
         df.sort_values(["customer_id", "month_start", "start_date", "subscription_id"])
-          .drop_duplicates(subset=["customer_id", "month_start"], keep="last")
-          .sort_values(["customer_id", "month_start"])
-          .reset_index(drop=True)
+        .drop_duplicates(subset=["customer_id", "month_start"], keep="last")
+        .sort_values(["customer_id", "month_start"])
+        .reset_index(drop=True)
     )
 
     df["prev_billed_mrr"] = df.groupby("customer_id")["billed_mrr"].shift(1)
@@ -68,6 +72,15 @@ def build_customer_month(
             churn_months = set(
                 zip(churn_events["customer_id"], churn_events["month_start"])
             )
+
+    df["is_churn_month"] = df.apply(
+        lambda row: (row["customer_id"], row["month_start"]) in churn_months,
+        axis=1,
+    )
+
+    # Churn month should represent the first zero-revenue month
+    df["is_active"] = ~df["is_churn_month"]
+    df.loc[df["is_churn_month"], "billed_mrr"] = 0
 
     def classify_movement(row):
         key = (row["customer_id"], row["month_start"])
@@ -96,7 +109,6 @@ def build_customer_month(
         return row["billed_mrr"] - row["prev_billed_mrr"]
 
     df["mrr_change"] = df.apply(calculate_mrr_change, axis=1).round(2)
-    df["is_active"] = True
 
     df["month_start"] = df["month_start"].dt.date
 
