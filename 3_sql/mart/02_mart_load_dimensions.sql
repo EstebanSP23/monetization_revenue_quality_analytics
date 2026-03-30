@@ -18,9 +18,9 @@ WITH month_series AS (
 SELECT
 	month_start,
 	EXTRACT(YEAR from month_start)::INT			AS year,
-	EXTRACT(MONTH from month_start)::INT 			AS month_num,
+	EXTRACT(MONTH from month_start)::INT 		AS month_num,
 	TO_CHAR(month_start, 'YYYY-MM')				AS year_month,
-	EXTRACT(QUARTER from month_start)::INT			AS quarter,
+	EXTRACT(QUARTER from month_start)::INT		AS quarter,
 	TO_CHAR(month_start, 'YYYY-"Q"Q')			AS year_quarter
 FROM month_series;
 
