@@ -27,31 +27,31 @@ CREATE TABLE staging.plan_catalog (
 DROP TABLE IF EXISTS staging.customers;
 
 CREATE TABLE staging.customers (
-	customer_id				TEXT PRIMARY KEY,
-	segment					TEXT,
-	signup_date				DATE,
-	initial_plan_key			TEXT,
-	initial_contract_type			TEXT,
-	initial_locations			INTEGER,
-	status					TEXT
+	customer_id							TEXT PRIMARY KEY,
+	segment								TEXT,
+	signup_date							DATE,
+	initial_plan_key					TEXT,
+	initial_contract_type				TEXT,
+	initial_locations					INTEGER,
+	status								TEXT
 );
 
 -- ---------- staging.subscriptions ----------
 DROP TABLE IF EXISTS staging.subscriptions;
 
 CREATE TABLE staging.subscriptions (
-	subscription_id				TEXT PRIMARY KEY,
-	customer_id				TEXT,
-	plan_id					INTEGER,
-	plan_key				TEXT,
-	contract_type				TEXT,
-	start_date				DATE,
-	end_date				DATE,
-	locations				INTEGER,
-	discount_pct				NUMERIC(4,2),
-	list_mrr				NUMERIC(10,2),
-	billed_mrr				NUMERIC(10,2),
-	is_active				BOOLEAN
+	subscription_id						TEXT PRIMARY KEY,
+	customer_id							TEXT,
+	plan_id								INTEGER,
+	plan_key							TEXT,
+	contract_type						TEXT,
+	start_date							DATE,
+	end_date							DATE,
+	locations							INTEGER,
+	discount_pct						NUMERIC(4,2),
+	list_mrr							NUMERIC(10,2),
+	billed_mrr							NUMERIC(10,2),
+	is_active							BOOLEAN
 );
 
 -- ---------- staging.subscription_events ----------
@@ -68,24 +68,24 @@ CREATE TABLE staging.subscription_events (
     	old_locations       			INTEGER,
     	new_locations       			INTEGER,
     	old_discount_pct    			NUMERIC(4,2),
-    	new_discount_pct   		 	NUMERIC(4,2)
+    	new_discount_pct   		 		NUMERIC(4,2)
 );
 
 -- ---------- staging.customer_month ----------
 DROP TABLE IF EXISTS staging.customer_month;
 
 CREATE TABLE staging.customer_month (
-	month_start				DATE NOT NULL,
-	customer_id				TEXT NOT NULL,
-	plan_id					INTEGER,
-	contract_type				TEXT,
-	locations				INTEGER,
-	list_mrr				NUMERIC(10,2),
-	discount_pct				NUMERIC(4,2),
-	billed_mrr				NUMERIC(10,2),
-	prev_billed_mrr				NUMERIC(10,2),
-	mrr_change				NUMERIC(10,2),
-	movement_type				TEXT,
-	is_active				BOOLEAN NOT NULL,
+	month_start							DATE NOT NULL,
+	customer_id							TEXT NOT NULL,
+	plan_id								INTEGER,
+	contract_type						TEXT,
+	locations							INTEGER,
+	list_mrr							NUMERIC(10,2),
+	discount_pct						NUMERIC(4,2),
+	billed_mrr							NUMERIC(10,2),
+	prev_billed_mrr						NUMERIC(10,2),
+	mrr_change							NUMERIC(10,2),
+	movement_type						TEXT,
+	is_active							BOOLEAN NOT NULL,
 	PRIMARY KEY (customer_id, month_start)
 );
