@@ -52,9 +52,11 @@ The monetization model includes:
 
 This project focuses on revenue quality, not just revenue volume.
 
-```text
+---
 
 ## 3. Architecture Overview
+
+```text
 
 Data Generation (Python)
         |
@@ -99,6 +101,8 @@ Power BI
   - executive reporting layer
 
 ```
+
+---
 
 ## 4. Current Project Status
 
@@ -208,8 +212,7 @@ This is the core analytical fact table used to evaluate recurring revenue moveme
 
 #### Analytical Views
 
-mart.vw_monthly_mrr_bridge
-Creates a reconciled monthly MRR bridge showing:
+*mart.vw_monthly_mrr_bridge* creates a reconciled monthly MRR bridge showing:
 
 - beginning MRR
 - new MRR
@@ -220,8 +223,7 @@ Creates a reconciled monthly MRR bridge showing:
 
 This view validates that monthly revenue movements reconcile correctly.
 
-mart.vw_monthly_discount_profile
-Summarizes monthly discount usage across active customers and billed MRR, including:
+*mart.vw_monthly_discount_profile* summarizes monthly discount usage across active customers and billed MRR, including:
 
 - active customers
 - customers with and without discounts
@@ -230,8 +232,7 @@ Summarizes monthly discount usage across active customers and billed MRR, includ
 - non-discounted MRR
 - share of MRR under discount
 
-mart.vw_monthly_monetization_mix
-Breaks monetization down by:
+*mart.vw_monthly_monetization_mix* breaks monetization down by:
 
 - month
 - segment
@@ -240,8 +241,7 @@ Breaks monetization down by:
 
 This view shows where revenue, discounting, and customer volume are concentrated across the business mix.
 
-mart.vw_monthly_expansion_profile
-Isolates monthly expansion activity across the business mix, including:
+*mart.vw_monthly_expansion_profile* isolates monthly expansion activity across the business mix, including:
 
 - expanding customers
 - expansion events
@@ -249,8 +249,7 @@ Isolates monthly expansion activity across the business mix, including:
 - post-expansion locations
 - average expansion MRR per customer
 
-mart.vw_monthly_revenue_loss_profile
-Isolates contraction and churn across the business mix, including:
+*mart.vw_monthly_revenue_loss_profile* isolates contraction and churn across the business mix, including:
 
 - customers with revenue loss
 - revenue loss events
@@ -291,6 +290,8 @@ This project is designed to showcase:
 
 ## 9. Repository Structure
 
+```text
+
 0_project_admin/
 1_data_generation/
 2_data/
@@ -305,7 +306,9 @@ This project is designed to showcase:
     pbix/
     screenshots/
 5_outputs/
-README.md
+    README.md
+
+```
 
 ---
 
