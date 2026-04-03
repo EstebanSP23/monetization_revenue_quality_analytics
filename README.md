@@ -52,7 +52,7 @@ The monetization model includes:
 
 This project focuses on revenue quality, not just revenue volume.
 
----
+```text
 
 ## 3. Architecture Overview
 
@@ -98,7 +98,7 @@ MART Layer
 Power BI
   - executive reporting layer
 
----
+```
 
 ## 4. Current Project Status
 
